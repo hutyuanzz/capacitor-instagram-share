@@ -4,8 +4,5 @@ import android.util.Log;
 
 public class ShareInstagram {
 
-    public String echo(String value) {
-        Log.i("Echo", value);
-        return value;
-    }
+    public void shareToStory(String imageUrl, String appID) {}
 }

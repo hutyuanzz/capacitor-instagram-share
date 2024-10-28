@@ -8,17 +8,18 @@ import Capacitor
 @objc(ShareInstagramPlugin)
 public class ShareInstagramPlugin: CAPPlugin, CAPBridgedPlugin {
     public let identifier = "ShareInstagramPlugin"
+    
     public let jsName = "ShareInstagram"
     public let pluginMethods: [CAPPluginMethod] = [
-        CAPPluginMethod(name: "echo", returnType: CAPPluginReturnPromise)
+        CAPPluginMethod(name: "shareToStory", returnType: CAPPluginReturnPromise)
     ]
     private let implementation = ShareInstagram()
 
-   private let appID = "9249109415116564"  // Thay bằng App ID của bạn
     private let instagramURLSchema = "instagram-stories://share"
 
-    @objc func echo(_ call: CAPPluginCall) {
-         guard let imageURLString = call.getString("value"),
+    @objc func shareToStory(_ call: CAPPluginCall) {
+        let appID = call.getString("appID")
+         guard let imageURLString = call.getString("imageUrl"),
               let url = URL(string: imageURLString),
               let imageData = try? Data(contentsOf: url) else {
             call.reject("Invalid image URL or failed to load image")
@@ -37,11 +38,9 @@ public class ShareInstagramPlugin: CAPPlugin, CAPBridgedPlugin {
 
             UIApplication.shared.open(urlSchema, options: [:], completionHandler: nil)
             
-        call.resolve([
-            "value": implementation.echo(imageURLString)
-        ])
+            call.resolve(["message": "Photo shared successfully."])
         } else {
-            call.reject("Instagram is not installed or cannot open URL schema")
+            call.reject("Instagram is not installed.")
         }
     }
 }
